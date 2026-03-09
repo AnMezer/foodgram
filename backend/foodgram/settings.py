@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 
 from project_settings import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,7 +29,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'recipes',
-    'api'
+    'api',
+    'rest_framework',
+    'djoser',
 ]
 
 MIDDLEWARE = [
@@ -111,3 +114,18 @@ STATIC_URL = 'static/'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 MEDIA_ROOT = BASE_DIR / 'media'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}

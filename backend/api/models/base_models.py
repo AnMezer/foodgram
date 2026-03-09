@@ -15,3 +15,6 @@ class UserBase(models.Model):
 class UserRecipeBase(UserBase):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
                                verbose_name='Рецепт')
+
+    class Meta:
+        abstract = True

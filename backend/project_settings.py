@@ -17,6 +17,15 @@ class Config(BaseSettings):
     DEBUG_MODE: bool = True
     ALLOWED_HOSTS: Union[list[str], str] = DEFAULT_HOSTS
 
+    TAG_NAME_LENGTH: int = 32
+    TAG_SLUG_LENGTH: int = 32
+
+    INGREDIENT_NAME_LENGTH: int = 128
+    MEAS_UNIT_LENGTH: int = 64
+
+    RECIPE_NAME_LENGTH: int = 256
+    MIN_COOKING_TIME: int = 1
+
     @field_validator('ALLOWED_HOSTS', mode='before')
     @classmethod
     def validate_hosts(cls, raw_hosts: Any) -> list[str]:

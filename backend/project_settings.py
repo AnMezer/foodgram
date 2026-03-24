@@ -5,7 +5,7 @@ from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DEFAULT_HOSTS = ['localhost', '127.0.0.1']
+DEFAULT_HOSTS = ['localhost', '127.0.0.1', 'host.docker.internal']
 
 
 class Config(BaseSettings):
@@ -17,6 +17,10 @@ class Config(BaseSettings):
     DEBUG_MODE: bool = True
     ALLOWED_HOSTS: Union[list[str], str] = DEFAULT_HOSTS
 
+    # --- Переменные ----
+    FIRST_NAME_LENGTH: int = 150
+    LAST_NAME_LENGTH: int = 150
+
     TAG_NAME_LENGTH: int = 32
     TAG_SLUG_LENGTH: int = 32
 
@@ -25,6 +29,14 @@ class Config(BaseSettings):
 
     RECIPE_NAME_LENGTH: int = 256
     MIN_COOKING_TIME: int = 1
+
+    EMAIL_LENGTH: int = 254
+
+    FORBIDDEN_USERNAMES: tuple = ('me',)
+    REGEX_STAMP: str = '[\w.@+-]+\z'
+
+
+    # -------------------
 
     @field_validator('ALLOWED_HOSTS', mode='before')
     @classmethod

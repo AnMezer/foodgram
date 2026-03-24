@@ -1,17 +1,19 @@
 from symtable import Class
 
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, get_object_or_404
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins, status, filters
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from djoser.serializers import SetPasswordSerializer
 
+from api.filters import IngredientFilter
 from api.serializers import UserCreateSerializer, UsersListSerializer, \
-    AvatarEditSerializer, IdNameSlugSerializer
-from recipes.models.models import Tag
+    AvatarEditSerializer, IdNameSlugSerializer, IngredientSerializer
+from recipes.models.models import Tag, Ingredient
 
 User = get_user_model()
 
@@ -83,3 +85,13 @@ class TagsViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
     queryset = Tag.objects.all()
     serializer_class = IdNameSlugSerializer
     permission_classes = (AllowAny,)
+
+class IngredientsViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                         viewsets.GenericViewSet):
+
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    permission_classes = (AllowAny,)
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
+    filterset_class = IngredientFilter # TODO: Проверить на Postgres
+    ordering = ('name',)

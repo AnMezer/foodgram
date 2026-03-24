@@ -8,7 +8,7 @@ from django.core.files.base import ContentFile
 
 from api.models.models import Subscribe
 from project_settings import config
-from recipes.models.models import Tag
+from recipes.models.models import Tag, Ingredient
 
 User = get_user_model()
 
@@ -25,7 +25,10 @@ class Base64ImageField(serializers.ImageField):
     def to_representation(self, value):
         if not value:
             return None
-        return value.url
+        request = self.context.get('request')
+        if not request:
+            return None
+        return request.build_absolute_uri(value.url)
 
 class AvatarEditSerializer(serializers.ModelSerializer):
     """Сериализатор аватара"""
@@ -106,3 +109,9 @@ class IdNameSlugSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'name', 'slug')
+
+class IngredientSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Ingredient
+        fields = ('id', 'name', 'measurement_unit')

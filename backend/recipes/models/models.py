@@ -64,6 +64,9 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(Ingredient,
                                          through='RecipeIngredient',
                                          verbose_name='Ингредиенты')
+    image = models.ImageField('Изображение рецепта',
+                              upload_to='recipes.images',
+                              blank=True)
 
     class Meta:
         default_related_name = 'recipes'

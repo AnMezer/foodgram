@@ -5,12 +5,13 @@ from django.urls import path, include
 from djoser.views import TokenCreateView, TokenDestroyView
 from rest_framework import routers
 
-from api.views import UsersViewSet, TagsViewSet
+from api.views import UsersViewSet, TagsViewSet, IngredientsViewSet
 
 router_v1 = routers.DefaultRouter()
 
 router_v1.register('users', UsersViewSet, basename='users')
 router_v1.register('tags', TagsViewSet, basename='tags')
+router_v1.register('ingredients', IngredientsViewSet, basename='ingredients')
 
 urlpatterns = [
     path('api/', include(router_v1.urls)),

@@ -14,6 +14,12 @@ class Config(BaseSettings):
                                       env_file_encoding='utf-8',
                                       extra='ignore')
 
+    POSTGRES_DB: str = 'django'
+    POSTGRES_USER: str = 'django'
+    POSTGRES_PASSWORD: str = ''
+    DB_HOST: str = ''
+    DB_PORT: int = 5431
+
     DJANGO_SECRET_KEY: str = '111'
     DEBUG_MODE: bool = True
     ALLOWED_HOSTS: Union[list[str], str] = DEFAULT_HOSTS

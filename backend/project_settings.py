@@ -42,7 +42,7 @@ class Config(BaseSettings):
     EMAIL_LENGTH: int = 254
 
     FORBIDDEN_USERNAMES: set = ('me',)
-    REGEX_STAMP: str = '[\w.@+-]+\z'
+    REGEX_STAMP: str = r'[\w.@+-]+\z'
 
     HASHIDS_SALT: str = 'foodgram'
     HASH_ID_MIN_LENGTH: int = 6

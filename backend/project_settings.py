@@ -1,3 +1,4 @@
+from importlib import import_module
 from pathlib import Path
 from typing import Any, Union
 
@@ -16,6 +17,7 @@ class Config(BaseSettings):
     DJANGO_SECRET_KEY: str = '111'
     DEBUG_MODE: bool = True
     ALLOWED_HOSTS: Union[list[str], str] = DEFAULT_HOSTS
+    FRONTEND_URL: str = 'http://localhost:3000'
 
     # --- Переменные ----
     FIRST_NAME_LENGTH: int = 150
@@ -32,10 +34,43 @@ class Config(BaseSettings):
 
     EMAIL_LENGTH: int = 254
 
-    FORBIDDEN_USERNAMES: tuple = ('me',)
+    FORBIDDEN_USERNAMES: set = ('me',)
     REGEX_STAMP: str = '[\w.@+-]+\z'
 
+    HASHIDS_SALT: str = 'foodgram'
+    HASH_ID_MIN_LENGTH: int = 6
 
+    PAGESIZE: int = 6
+
+    FIELDS_FOR_ANOTHER_SAVE_RECIPE: set = ('tags', 'ingredients', 'image')
+    # ---------------------
+
+    ENDPOINT_VERSIONS: dict[str, str] = {
+        'users': 'v1',
+        'tags': 'v1',
+        'recipes': 'v1',
+        'ingredients': 'v1',
+        'favorite': 'v1'
+    }
+
+    VIEWSET_APP_MAP: dict[str, str] = {
+        'users': 'users',
+        'tags': 'recipes',
+        'recipes': 'recipes',
+        'ingredients': 'recipes'
+    }
+
+    DEFAULT_ENВPOINT_VERSION: str = 'v1'
+
+    def get_viewset(self, endpoint_name, viewset_name):
+        """Возвращает ViewSet для выбранной версии эндпоинта"""
+        version = self.ENDPOINT_VERSIONS.get(endpoint_name,
+                                             self.DEFAULT_ENВPOINT_VERSION)
+        app = self.VIEWSET_APP_MAP.get(endpoint_name)
+        module_path = f'{app}.{version}.views'
+        module = import_module(module_path)
+        viewset = getattr(module, viewset_name)
+        return viewset
     # -------------------
 
     @field_validator('ALLOWED_HOSTS', mode='before')

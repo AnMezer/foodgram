@@ -140,3 +140,4 @@ dmypy.json
 
 static/
 media/
+!media/recipes/default.png

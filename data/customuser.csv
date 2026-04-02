@@ -1,0 +1,4 @@
+username,email,first_name,last_name,password,is_staff,is_superuser,is_active
+vasya.ivanov,vivanov@yandex.ru,Вася,Иванов,MySecretPas$word,0,0,1
+second-user,second_user@email.org,Андрей,Макаревский,MySecretPas$word,0,0,1
+third-user-username,third-user@user.ru,Гордон,Рамзиков,MySecretPas$word,0,0,1

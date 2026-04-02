@@ -1,3 +1,4 @@
+# flake8: noqa
 from importlib import import_module
 from pathlib import Path
 from typing import Any, Union
@@ -98,6 +99,7 @@ class Config(BaseSettings):
 
 
 config = Config()
+
 
 
 

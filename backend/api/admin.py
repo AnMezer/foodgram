@@ -1,23 +1,23 @@
 from django.contrib import admin
 
-from api.models.models import Subscribe, ShoppingCart, Favorite
+from api.models.favorite import Favorite
+from api.models.shopping_cart import ShoppingCart
 
 
-@admin.register(Subscribe)
-class SubscribeAdmin(admin.ModelAdmin):
-    list_display = ('subscriber', 'user')
-    search_fields = ('subscriber', 'user')
-    autocomplete_fields = ('subscriber', 'user')
+class UserRecipeBase(admin.ModelAdmin):
+    list_display = ('user', 'recipe')
+    search_fields = ('user', 'recipe')
+    autocomplete_fields = ('user', 'recipe')
+
+    class Meta:
+        abstract = True
+
 
 @admin.register(ShoppingCart)
-class ShoppingCartAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe')
-    search_fields = ('user', 'recipe')
-    autocomplete_fields = ('user', 'recipe')
+class ShoppingCartAdmin(UserRecipeBase):
+    pass
+
 
 @admin.register(Favorite)
-class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('user', 'recipe')
-    search_fields = ('user', 'recipe')
-    autocomplete_fields = ('user', 'recipe')
-
+class FavoriteAdmin(UserRecipeBase):
+    pass

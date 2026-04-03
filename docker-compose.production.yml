@@ -5,7 +5,7 @@ volumes:
 
 services:
   db:
-    image: postgres:18
+    image: postgres:15-alpine
     env_file: .env
     volumes:
       - pg_data:/var/lib/postgresql/data
@@ -13,28 +13,29 @@ services:
 
 
   backend:
-    image: anmezer/foodgram_backend:latest
-    #build: ./backend
+    #image: anmezer/foodgram_backend:latest
+    build: ./backend
     env_file: .env
     depends_on:
       - db
     volumes:
       - static:/backend_static
       - media:/media
+      - ./data:/data
     restart: unless-stopped
 
   frontend:
     env_file: .env
-    image: anmezer/foodgram_frontend:latest
-    #build: ./frontend
+    #image: anmezer/foodgram_frontend:latest
+    build: ./frontend
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
     restart: on-failure
 
   nginx:
-    image: anmezer/foodgram_nginx:latest
-    #build: ./nginx
+    #image: anmezer/foodgram_nginx:latest
+    build: ./nginx
     depends_on:
       - backend
     env_file: .env

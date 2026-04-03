@@ -8,7 +8,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_HOSTS = ['localhost', '127.0.0.1', 'host.docker.internal']
-
+DEFAULT_CSRF_TRUSTED_ORIGINS = ['http://localhost:8000',
+                                'http://127.0.0.1:8000']
 
 class Config(BaseSettings):
     model_config = SettingsConfigDict(env_file=BASE_DIR / '.env',
@@ -24,6 +25,7 @@ class Config(BaseSettings):
     DJANGO_SECRET_KEY: str = '111'
     DEBUG_MODE: bool = False
     ALLOWED_HOSTS: Union[list[str], str] = DEFAULT_HOSTS
+    CSRF_TRUSTED_ORIGINS: Union[list[str], str] = DEFAULT_CSRF_TRUSTED_ORIGINS
     FRONTEND_URL: str = 'http://localhost:3000'
 
     # --- Переменные ----
@@ -79,6 +81,23 @@ class Config(BaseSettings):
         viewset = getattr(module, viewset_name)
         return viewset
     # -------------------
+
+    @field_validator('ALLOWED_HOSTS', mode='before')
+    @classmethod
+    def validate_hosts(cls, raw_csrf: Any) -> list[str]:
+        global DEFAULT_CSRF_TRUSTED_ORIGINS
+        if not raw_csrf:
+            return DEFAULT_CSRF_TRUSTED_ORIGINS
+        if isinstance(raw_csrf, list):
+            return raw_csrf
+        if isinstance(raw_csrf, str):
+            try:
+                hosts = [host.strip() for host in raw_csrf.split(',')
+                         if host.strip()]
+                return hosts
+            except Exception:
+                return DEFAULT_CSRF_TRUSTED_ORIGINS
+        return DEFAULT_CSRF_TRUSTED_ORIGINS
 
     @field_validator('ALLOWED_HOSTS', mode='before')
     @classmethod

@@ -82,7 +82,7 @@ class Config(BaseSettings):
         return viewset
     # -------------------
 
-    @field_validator('ALLOWED_HOSTS', mode='before')
+    @field_validator('CSRF_TRUSTED_ORIGINS', mode='before')
     @classmethod
     def validate_hosts(cls, raw_csrf: Any) -> list[str]:
         global DEFAULT_CSRF_TRUSTED_ORIGINS

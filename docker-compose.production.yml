@@ -13,8 +13,8 @@ services:
 
 
   backend:
-    #image: anmezer/foodgram_backend:latest
-    build: ./backend
+    image: anmezer/foodgram_backend:latest
+    #build: ./backend
     env_file: .env
     depends_on:
       - db
@@ -26,16 +26,16 @@ services:
 
   frontend:
     env_file: .env
-    #image: anmezer/foodgram_frontend:latest
-    build: ./frontend
+    image: anmezer/foodgram_frontend:latest
+    #build: ./frontend
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
     restart: on-failure
 
   nginx:
-    #image: anmezer/foodgram_nginx:latest
-    build: ./nginx
+    image: anmezer/foodgram_nginx:latest
+    #build: ./nginx
     depends_on:
       - backend
     env_file: .env

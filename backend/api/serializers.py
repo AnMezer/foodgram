@@ -234,6 +234,9 @@ class RecipeSerializer(RecipeShortSerializer):
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            return False
+
         if not Favorite.objects.filter(user_id=request.user.pk,
                                        recipe_id=obj.pk).exists():
             return False
@@ -241,6 +244,9 @@ class RecipeSerializer(RecipeShortSerializer):
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            return False
+
         if not ShoppingCart.objects.filter(user_id=request.user.pk,
                                            recipe_id=obj.pk).exists():
             return False

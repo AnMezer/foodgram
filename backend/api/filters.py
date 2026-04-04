@@ -38,18 +38,18 @@ class RecipeFilter(django_filters.FilterSet):
 
     def filter_is_in_shopping_cart(self, queryset, name, value):
         request = getattr(self, 'request', None)
-        if (request and
-                value and
-                get_bool(value) and
-                self.request.user.is_authenticated):
+        if (request
+                and value
+                and get_bool(value)
+                and self.request.user.is_authenticated):
             return queryset.filter(shoppingcart__user=self.request.user)
         return queryset
 
     def filter_is_favorited(self, queryset, name, value):
         request = getattr(self, 'request', None)
-        if (request and
-                value and
-                get_bool(value) and
-                self.request.user.is_authenticated):
+        if (request
+                and value
+                and get_bool(value)
+                and self.request.user.is_authenticated):
             return queryset.filter(favorite__user=self.request.user)
         return queryset

@@ -23,43 +23,30 @@ class UsersViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
     queryset = User.objects.all()
 
     def get_serializer_class(self):
-        # тесты ругаются на match/case
-        # match self.action:
-        #     case 'create':
-        #         return UserCreateSerializer
-        #     case 'retrieve' | 'me':
-        #         return UsersListSerializer
-        #     case 'set_password':
-        #         return SetPasswordSerializer
-        #     case 'avatar':
-        #         return AvatarEditSerializer
-        #     case 'subscribe' | 'subscriptions':
-        #         return SubscribeSerializer
-        #     case _:
-        #         return UsersListSerializer
-        if self.action == 'create':
-            return UserCreateSerializer
-        elif self.action in ('retrieve', 'me'):
-            return UsersListSerializer
-        elif self.action == 'set_password':
-            return SetPasswordSerializer
-        elif self.action == 'avatar':
-            return AvatarEditSerializer
-        elif self.action in ('subscribe', 'subscriptions'):
-            return SubscribeSerializer
-        else:
-            return UsersListSerializer
+        match self.action: # noqa: E999
+            case 'create': # noqa: E999
+                return UserCreateSerializer # noqa: E999
+            case 'retrieve' | 'me': # noqa: E999
+                return UsersListSerializer # noqa: E999
+            case 'set_password': # noqa: E999
+                return SetPasswordSerializer # noqa: E999
+            case 'avatar': # noqa: E999
+                return AvatarEditSerializer # noqa: E999
+            case 'subscribe' | 'subscriptions': # noqa: E999
+                return SubscribeSerializer # noqa: E999
+            case _: # noqa: E999
+                return UsersListSerializer # noqa: E999
 
     def get_permissions(self):
-        match self.action:
-            case 'me' | 'set_password' | 'avatar':
-                return (IsSelfUser(),)
-            case 'subscribe':
-                return (IsAuthenticated(),)
-            case 'create' | 'list' | 'retrieve':
-                return (AllowAny(),)
-            case _:
-                return (IsAuthenticated(),)
+        match self.action: # noqa: E999
+            case 'me' | 'set_password' | 'avatar': # noqa: E999
+                return (IsSelfUser(),) # noqa: E999
+            case 'subscribe': # noqa: E999
+                return (IsAuthenticated(),) # noqa: E999
+            case 'create' | 'list' | 'retrieve': # noqa: E999
+                return (AllowAny(),) # noqa: E999
+            case _: # noqa: E999
+                return (IsAuthenticated(),) # noqa: E999
 
     @action(detail=False, methods=['GET'])
     def me(self, request):

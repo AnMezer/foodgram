@@ -60,8 +60,8 @@ class RecipesViewSet(viewsets.ModelViewSet):
     def get_authenticators(self):
         match self.action:
             case ('list'
-                  |'retrieve'
-                  |'get_link'  ):
+                  | 'retrieve'
+                  | 'get_link'):
                 return ()
             case _:
                 return [auth() for auth in self.authentication_classes]

@@ -17,40 +17,28 @@
 Для запуска локально:
 
 1. Создайте .env файл по образцу (.env.example)
-находясь в папке /foodgram/ выполните:
+Находясь в папке /foodgram/ выполните (git):
 ```
-docker compose -f docker-compose.production.yml up
-```
-
-```
-docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+docker compose up
 ```
 
-```
-CONTAINER=$(docker compose -f docker-compose.production.yml ps -q backend)
-
-docker cp ./data $CONTAINER:/app/data
-
-docker compose -f docker-compose.production.yml exec backend python manage.py reload
-```
-
-После запуска проект станет доступным по адресу: http://127.0.0.1:8000
+После запуска проект станет доступным по адресам:
+Админ. панель: http://127.0.0.1:8000/admin/  
+frontend: http://127.0.0.1:8000
 
 [Полная документация к эндпоинтам](https://anmezer.github.io/foodgram/)
 
 ### Тестовые данные
-Для быстрого старта в проекте предусмотрены:   
+В проекте предусмотрены:   
 - тестовые данные /foodgram/data/  
 - команда reload - очищает БД, наполняет тестовыми данными, создает учетную запись суперпользователя
 
-Для наполнения БД выполните в папке /foodgram/backend/  
+Для наполнения БД выполните в папке /foodgram/ 
 
 ```
-python manage.py reload
+docker compose exec python manage.py reload
 ```
-
-#### Админ панель
-Доступна по адресу http://127.0.0.1:8000/admin  
-Данные супервользователя по умолчанию:  
+ 
+Данные суперпользователя по умолчанию:  
 admin@admin.ru  
 admin

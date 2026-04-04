@@ -56,7 +56,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     ordering = ('-created_at',)
 
     def get_authenticators(self):
-        authenticators = [auth() for auth in self.authentication_classes]
+        authenticators = super().get_authenticators()
         if hasattr(self, 'action'):
             match self.action:
                 case 'list' | 'retrieve' | 'get_link':

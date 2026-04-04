@@ -141,3 +141,4 @@ dmypy.json
 static/
 media/
 !media/recipes/default.png
+/backend/.venv_wsl/

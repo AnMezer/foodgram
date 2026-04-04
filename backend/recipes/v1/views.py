@@ -1,3 +1,4 @@
+# flake8: noqa: E999
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -58,33 +59,33 @@ class RecipesViewSet(viewsets.ModelViewSet):
     def get_authenticators(self):
         authenticators = super().get_authenticators()
         if hasattr(self, 'action'):
-            match self.action: # noqa
-                case 'list' | 'retrieve' | 'get_link': # noqa: E999
-                    return () # noqa: E999
-                case _: # noqa: E999
-                    return authenticators # noqa: E999
+            match self.action:
+                case 'list' | 'retrieve' | 'get_link':
+                    return ()
+                case _:
+                    return authenticators
         return authenticators
 
     def get_permissions(self):
         match self.action:
-            case ('create' # noqa: E999
-                  | 'shopping_cart' # noqa: E999
-                  | 'download_shopping_cart' # noqa: E999
-                  | 'favorite'): # noqa: E999
-                return (IsAuthenticated(),) # noqa: E999
-            case ('update' # noqa: E999
-                  | 'partial_update' # noqa: E999
-                  | 'destroy'): # noqa: E999
-                return (IsOwnerOrAdmin(),) # noqa: E999
-            case _: # noqa: E999
-                return (AllowAny(),) # noqa: E999
+            case ('create'
+                  | 'shopping_cart'
+                  | 'download_shopping_cart'
+                  | 'favorite'):
+                return (IsAuthenticated(),)
+            case ('update'
+                  | 'partial_update'
+                  | 'destroy'):
+                return (IsOwnerOrAdmin(),)
+            case _:
+                return (AllowAny(),)
 
     def get_serializer_class(self):
         match self.action:
-            case 'favorite' | 'shopping_cart': # noqa: E999
-                return RecipeShortSerializer # noqa: E999
-            case _: # noqa: E999
-                return RecipeSerializer # noqa: E999
+            case 'favorite' | 'shopping_cart':
+                return RecipeShortSerializer
+            case _:
+                return RecipeSerializer
 
     @action(detail=True, methods=['GET'], url_path='get-link')
     def get_link(self, request, pk):

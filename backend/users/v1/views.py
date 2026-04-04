@@ -1,3 +1,4 @@
+# flake8: noqa: E999
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import mixins, status, viewsets
@@ -23,30 +24,30 @@ class UsersViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
     queryset = User.objects.all()
 
     def get_serializer_class(self):
-        match self.action: # noqa: E999
-            case 'create': # noqa: E999
-                return UserCreateSerializer # noqa: E999
-            case 'retrieve' | 'me': # noqa: E999
-                return UsersListSerializer # noqa: E999
-            case 'set_password': # noqa: E999
-                return SetPasswordSerializer # noqa: E999
-            case 'avatar': # noqa: E999
-                return AvatarEditSerializer # noqa: E999
-            case 'subscribe' | 'subscriptions': # noqa: E999
-                return SubscribeSerializer # noqa: E999
-            case _: # noqa: E999
-                return UsersListSerializer # noqa: E999
+        match self.action:
+            case 'create':
+                return UserCreateSerializer
+            case 'retrieve' | 'me':
+                return UsersListSerializer
+            case 'set_password':
+                return SetPasswordSerializer
+            case 'avatar':
+                return AvatarEditSerializer
+            case 'subscribe' | 'subscriptions':
+                return SubscribeSerializer
+            case _:
+                return UsersListSerializer
 
     def get_permissions(self):
-        match self.action: # noqa: E999
-            case 'me' | 'set_password' | 'avatar': # noqa: E999
-                return (IsSelfUser(),) # noqa: E999
-            case 'subscribe': # noqa: E999
-                return (IsAuthenticated(),) # noqa: E999
-            case 'create' | 'list' | 'retrieve': # noqa: E999
-                return (AllowAny(),) # noqa: E999
-            case _: # noqa: E999
-                return (IsAuthenticated(),) # noqa: E999
+        match self.action:
+            case 'me' | 'set_password' | 'avatar':
+                return (IsSelfUser(),)
+            case 'subscribe':
+                return (IsAuthenticated(),)
+            case 'create' | 'list' | 'retrieve':
+                return (AllowAny(),)
+            case _:
+                return (IsAuthenticated(),)
 
     @action(detail=False, methods=['GET'])
     def me(self, request):

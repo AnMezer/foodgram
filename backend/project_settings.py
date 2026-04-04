@@ -23,7 +23,7 @@ class Config(BaseSettings):
     DB_PORT: int = 5431
 
     DJANGO_SECRET_KEY: str = '111'
-    DEBUG_MODE: bool = False
+    DEBUG_MODE: bool = True
     ALLOWED_HOSTS: Union[list[str], str] = DEFAULT_HOSTS
     CSRF_TRUSTED_ORIGINS: Union[list[str], str] = DEFAULT_CSRF_TRUSTED_ORIGINS
     FRONTEND_URL: str = 'http://localhost:3000'

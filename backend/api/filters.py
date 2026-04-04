@@ -41,8 +41,8 @@ class RecipeFilter(django_filters.FilterSet):
         if (request
                 and value
                 and get_bool(value)
-                and self.request.user.is_authenticated):
-            return queryset.filter(shoppingcart__user=self.request.user)
+                and request.user.is_authenticated):
+            return queryset.filter(shoppingcart__user=request.user)
         return queryset
 
     def filter_is_favorited(self, queryset, name, value):
@@ -50,6 +50,6 @@ class RecipeFilter(django_filters.FilterSet):
         if (request
                 and value
                 and get_bool(value)
-                and self.request.user.is_authenticated):
-            return queryset.filter(favorite__user=self.request.user)
+                and request.user.is_authenticated):
+            return queryset.filter(favorite__user=request.user)
         return queryset

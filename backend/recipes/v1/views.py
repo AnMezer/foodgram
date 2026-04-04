@@ -65,9 +65,6 @@ class RecipesViewSet(viewsets.ModelViewSet):
                     return authenticators
         return authenticators
 
-
-
-
     def get_permissions(self):
         match self.action:
             case ('create'

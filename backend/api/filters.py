@@ -46,7 +46,7 @@ class RecipeFilter(django_filters.FilterSet):
         return queryset
 
     def filter_is_favorited(self, queryset, name, value):
-        request = self.request
+        request = getattr(self, 'request', None)
         if (request and
                 value and
                 get_bool(value) and

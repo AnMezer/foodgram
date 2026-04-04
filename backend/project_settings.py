@@ -84,7 +84,7 @@ class Config(BaseSettings):
 
     @field_validator('CSRF_TRUSTED_ORIGINS', mode='before')
     @classmethod
-    def validate_hosts(cls, raw_csrf: Any) -> list[str]:
+    def validate_csrf_rtusted_origins(cls, raw_csrf: Any) -> list[str]:
         global DEFAULT_CSRF_TRUSTED_ORIGINS
         if not raw_csrf:
             return DEFAULT_CSRF_TRUSTED_ORIGINS

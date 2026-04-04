@@ -23,19 +23,32 @@ class UsersViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
     queryset = User.objects.all()
 
     def get_serializer_class(self):
-        match self.action:
-            case 'create':
-                return UserCreateSerializer
-            case 'retrieve' | 'me':
-                return UsersListSerializer
-            case 'set_password':
-                return SetPasswordSerializer
-            case 'avatar':
-                return AvatarEditSerializer
-            case 'subscribe' | 'subscriptions':
-                return SubscribeSerializer
-            case _:
-                return UsersListSerializer
+        # тесты ругаются на match/case
+        # match self.action:
+        #     case 'create':
+        #         return UserCreateSerializer
+        #     case 'retrieve' | 'me':
+        #         return UsersListSerializer
+        #     case 'set_password':
+        #         return SetPasswordSerializer
+        #     case 'avatar':
+        #         return AvatarEditSerializer
+        #     case 'subscribe' | 'subscriptions':
+        #         return SubscribeSerializer
+        #     case _:
+        #         return UsersListSerializer
+        if self.action == 'create':
+            return UserCreateSerializer
+        elif self.action in ('retrieve', 'me'):
+            return UsersListSerializer
+        elif self.action == 'set_password':
+            return SetPasswordSerializer
+        elif self.action == 'avatar':
+            return AvatarEditSerializer
+        elif self.action in ('subscribe', 'subscriptions'):
+            return SubscribeSerializer
+        else:
+            return UsersListSerializer
 
     def get_permissions(self):
         match self.action:

@@ -58,11 +58,15 @@ class RecipesViewSet(viewsets.ModelViewSet):
     def get_authenticators(self):
         authenticators = super().get_authenticators()
         if hasattr(self, 'action'):
-            match self.action:
-                case 'list' | 'retrieve' | 'get_link':
-                    return ()
-                case _:
-                    return authenticators
+            # тесты ругаются на match/case
+            #     match self.action:
+            #         case 'list' | 'retrieve' | 'get_link':
+            #             return ()
+            #         case _:
+            #             return authenticators
+            # return authenticators
+            if self.action in ('list', 'retrieve', 'get_link'):
+                return ()
         return authenticators
 
     def get_permissions(self):

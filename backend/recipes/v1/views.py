@@ -55,6 +55,19 @@ class RecipesViewSet(viewsets.ModelViewSet):
     filterset_class = RecipeFilter
     ordering = ('-created_at',)
 
+    def get_authenticators(self):
+        authenticators = [auth() for auth in self.authentication_classes]
+        if hasattr(self, 'action'):
+            match self.action:
+                case 'list' | 'retrieve' | 'get_link':
+                    return ()
+                case _:
+                    return authenticators
+        return authenticators
+
+
+
+
     def get_permissions(self):
         match self.action:
             case ('create'

@@ -109,7 +109,7 @@ class UsersListSerializer(UserPrimaryFieldsSerializer):
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
 
-        if not request.user.is_authenticated:
+        if not request or not request.user.is_authenticated:
             return False
         subscriber = request.user
 

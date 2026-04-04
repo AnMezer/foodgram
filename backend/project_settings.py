@@ -69,12 +69,12 @@ class Config(BaseSettings):
         'ingredients': 'recipes'
     }
 
-    DEFAULT_ENВPOINT_VERSION: str = 'v1'
+    DEFAULT_ENDPOINT_VERSION: str = 'v1'
 
     def get_viewset(self, endpoint_name, viewset_name):
         """Возвращает ViewSet для выбранной версии эндпоинта"""
         version = self.ENDPOINT_VERSIONS.get(endpoint_name,
-                                             self.DEFAULT_ENВPOINT_VERSION)
+                                             self.DEFAULT_ENDPOINT_VERSION)
         app = self.VIEWSET_APP_MAP.get(endpoint_name)
         module_path = f'{app}.{version}.views'
         module = import_module(module_path)

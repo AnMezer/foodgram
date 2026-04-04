@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, viewsets
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -53,7 +54,17 @@ class RecipesViewSet(viewsets.ModelViewSet):
                        filters.SearchFilter,
                        filters.OrderingFilter)
     filterset_class = RecipeFilter
+    authentication_classes = (TokenAuthentication,)
     ordering = ('-created_at',)
+
+    def get_authenticators(self):
+        match self.action:
+            case ('list'
+                  |'retrieve'
+                  |'get_link'  ):
+                return ()
+            case _:
+                return [auth() for auth in self.authentication_classes]
 
     def get_permissions(self):
         match self.action:
@@ -62,7 +73,9 @@ class RecipesViewSet(viewsets.ModelViewSet):
                   | 'download_shopping_cart'
                   | 'favorite'):
                 return (IsAuthenticated(),)
-            case 'update' | 'partial_update' | 'destroy':
+            case ('update'
+                  | 'partial_update'
+                  | 'destroy'):
                 return (IsOwnerOrAdmin(),)
             case _:
                 return (AllowAny(),)

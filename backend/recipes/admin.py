@@ -11,6 +11,7 @@ from .models.tag import Tag
 
 User = get_user_model()
 
+
 def get_ingredients_list(ingredients):
     if ingredients.exists():
         ingredients_list = [
@@ -20,6 +21,7 @@ def get_ingredients_list(ingredients):
         ]
         return f'<ul>{"".join(ingredients_list)}</ul>'
     return 'Нет ингредиентов'
+
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
@@ -78,8 +80,7 @@ class RecipeAdmin(admin.ModelAdmin):
         queryset = (
             super().get_queryset(request)
             .prefetch_related('tags', 'recipe_ingredients__ingredient')
-            .annotate(favorite_total=Count('favorite')
-        ))
+            .annotate(favorite_total=Count('favorite')))
         return queryset
 
     @admin.display(description='Тэги')
@@ -139,16 +140,8 @@ class UserRecipeBase(admin.ModelAdmin):
     def get_ingredients(self, obj):
         ingredients = (obj.recipe.recipe_ingredients
                        .select_related('ingredient').all())
-        # if ingredients.exists():
-        #     ingredients_list = [
-        #         (f'<li>{item.ingredient.name} - ({item.amount}'
-        #          f'{item.ingredient.measurement_unit})</li>')
-        #         for item in ingredients
-        #     ]
-        #     return f'<ul>{"".join(ingredients_list)}</ul>'
-        #
-        # return 'Нет ингредиентов'
         return get_ingredients_list(ingredients)
+
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(UserRecipeBase):

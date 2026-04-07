@@ -121,10 +121,8 @@ class IngredientAmountSerializer(serializers.Serializer):
                                       required=True)
 
 
-
 class IngredientRecipeSerializer(IngredientAmountSerializer):
     """Сериализатор для ингредиентов в рецептах"""
-    #id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
     name = serializers.CharField(source='ingredient.name', read_only=True)
     measurement_unit = serializers.CharField(
         source='ingredient.measurement_unit',
@@ -144,6 +142,7 @@ class RecipeShortSerializer(serializers.ModelSerializer):
     cooking_time = serializers.IntegerField(min_value=config.COOKING_TIME_MIN,
                                             max_value=config.COOKING_TIME_MAX,
                                             required=True)
+
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
@@ -167,7 +166,6 @@ class RecipeReadSerializer(RecipeShortSerializer):
                                                       'text',
                                                       'is_favorited',
                                                       'is_in_shopping_cart')
-
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
@@ -211,7 +209,7 @@ class RecipeSerializer(RecipeShortSerializer):
 
     def validate_tags(self, value):
         if len(value) != len(set(value)):
-                raise serializers.ValidationError('Нельзя дублировать тэги')
+            raise serializers.ValidationError('Нельзя дублировать тэги')
         return value
 
     def validate_ingredients(self, value):
@@ -230,12 +228,12 @@ class RecipeSerializer(RecipeShortSerializer):
                     missing_fields.append(field)
             if missing_fields:
                 raise serializers.ValidationError(
-                    f'Поля {", ".join(missing_fields)} обязательны для заполнения')
+                    f'Поля {", ".join(missing_fields)} '
+                    f'обязательны для заполнения')
         return attrs
 
     def to_representation(self, instance):
         return RecipeReadSerializer(instance, context=self.context).data
-
 
     def create(self, validated_data):
         tags = validated_data.pop('tags')

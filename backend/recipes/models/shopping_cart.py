@@ -1,5 +1,3 @@
-from django.db import models
-
 from recipes.models.base_models import UserRecipeBase
 
 

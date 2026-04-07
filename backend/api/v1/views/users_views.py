@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from api.v1.serializers.serializers import (AvatarEditSerializer, SetPasswordSerializer,
                                             SubscribeSerializer, UserCreateSerializer,
                                             UsersListSerializer)
-from recipes.permissions import IsSelfUser
+from recipes.permissions import IsSelfUser, IsAuthorOrReadonly
 from users.models import Subscribe
 
 User = get_user_model()
@@ -41,7 +41,7 @@ class UsersViewSet(mixins.ListModelMixin, mixins.CreateModelMixin,
     def get_permissions(self):
         match self.action:
             case 'me' | 'set_password' | 'avatar':
-                return (IsSelfUser(),)
+                return (IsAuthenticated(), IsAuthorOrReadonly())
             case 'subscribe':
                 return (IsAuthenticated(),)
             case 'create' | 'list' | 'retrieve':

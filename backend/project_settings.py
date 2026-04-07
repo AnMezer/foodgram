@@ -26,25 +26,29 @@ class Config(BaseSettings):
     DEBUG_MODE: bool = True
     ALLOWED_HOSTS: Union[list[str], str] = DEFAULT_HOSTS
     CSRF_TRUSTED_ORIGINS: Union[list[str], str] = DEFAULT_CSRF_TRUSTED_ORIGINS
-    FRONTEND_URL: str = 'http://localhost:3000'
 
     # --- Переменные ----
     FIRST_NAME_LENGTH: int = 150
     LAST_NAME_LENGTH: int = 150
+    USERNAME_LENGTH: int = 150
 
     TAG_NAME_LENGTH: int = 32
     TAG_SLUG_LENGTH: int = 32
 
     INGREDIENT_NAME_LENGTH: int = 128
     MEAS_UNIT_LENGTH: int = 64
+    INGREDIENT_AMOUNT_MIN: int = 1
+    INGREDIENT_AMOUNT_MAX: int = 999
+
 
     RECIPE_NAME_LENGTH: int = 256
-    MIN_COOKING_TIME: int = 1
+    COOKING_TIME_MIN: int = 1
+    COOKING_TIME_MAX: int = 480
 
     EMAIL_LENGTH: int = 254
 
     FORBIDDEN_USERNAMES: set = ('me',)
-    REGEX_STAMP: str = r'[\w.@+-]+\z'
+    REGEX_STAMP: str = r'^[\w.@+-]+\Z'
 
     HASHIDS_SALT: str = 'foodgram'
     HASH_ID_MIN_LENGTH: int = 6
@@ -52,6 +56,7 @@ class Config(BaseSettings):
     PAGESIZE: int = 6
 
     FIELDS_FOR_ANOTHER_SAVE_RECIPE: set = ('tags', 'ingredients', 'image')
+    DEFAULT_RECIPE_IMAGE_PATH: str = '/media/recipes/images/default.png'
     # ---------------------
 
     ENDPOINT_VERSIONS: dict[str, str] = {
@@ -62,21 +67,15 @@ class Config(BaseSettings):
         'favorite': 'v1'
     }
 
-    VIEWSET_APP_MAP: dict[str, str] = {
-        'users': 'users',
-        'tags': 'recipes',
-        'recipes': 'recipes',
-        'ingredients': 'recipes'
-    }
-
     DEFAULT_ENDPOINT_VERSION: str = 'v1'
 
     def get_viewset(self, endpoint_name, viewset_name):
         """Возвращает ViewSet для выбранной версии эндпоинта"""
         version = self.ENDPOINT_VERSIONS.get(endpoint_name,
                                              self.DEFAULT_ENDPOINT_VERSION)
-        app = self.VIEWSET_APP_MAP.get(endpoint_name)
-        module_path = f'{app}.{version}.views'
+        file_name = f'{endpoint_name}_views'
+        app = 'api'
+        module_path = f'{app}.{version}.views.{file_name}'
         module = import_module(module_path)
         viewset = getattr(module, viewset_name)
         return viewset

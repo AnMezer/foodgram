@@ -1,6 +1,7 @@
 import django_filters
 
 from api.utils import get_bool
+from recipes.models import Tag
 from recipes.models.ingredient import Ingredient
 from recipes.models.recipe import Recipe
 
@@ -15,9 +16,9 @@ class IngredientFilter(django_filters.FilterSet):
 
 
 class RecipeFilter(django_filters.FilterSet):
-
-    author = django_filters.NumberFilter(field_name='author_id')
-    tags = django_filters.CharFilter(method='filter_tags')
+    tags = django_filters.ModelMultipleChoiceFilter(field_name='tags__slug',
+                                                    to_field_name='slug',
+                                                    queryset=Tag.objects.all())
     is_in_shopping_cart = django_filters.CharFilter(
         method='filter_is_in_shopping_cart')
     is_favorited = django_filters.CharFilter(method='filter_is_favorited')
@@ -25,16 +26,6 @@ class RecipeFilter(django_filters.FilterSet):
     class Meta:
         model = Recipe
         fields = ('author', 'tags', 'is_in_shopping_cart', 'is_favorited')
-
-    def filter_tags(self, queryset, name, value):
-        request = self.request
-        if not request:
-            return queryset
-        tags = request.query_params.getlist('tags')
-        tags = [tag for tag in tags if tag]
-        if tags:
-            return queryset.filter(tags__slug__in=tags)
-        return queryset
 
     def filter_is_in_shopping_cart(self, queryset, name, value):
         request = getattr(self, 'request', None)

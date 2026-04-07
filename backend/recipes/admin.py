@@ -1,16 +1,25 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
 from django.db.models import Count
+from django.utils.safestring import mark_safe
 
+from .models import ShoppingCart, Favorite
 from .models.ingredient import Ingredient
 from .models.recipe import Recipe
 from .models.recipe_ingredient import RecipeIngredient
 from .models.tag import Tag
 
 User = get_user_model()
-admin.site.unregister(Group)
 
+def get_ingredients_list(ingredients):
+    if ingredients.exists():
+        ingredients_list = [
+            (f'<li>{item.ingredient.name} - ({item.amount}'
+             f'{item.ingredient.measurement_unit})</li>')
+            for item in ingredients
+        ]
+        return f'<ul>{"".join(ingredients_list)}</ul>'
+    return 'Нет ингредиентов'
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
@@ -30,7 +39,8 @@ class TagAdmin(admin.ModelAdmin):
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('name', 'measurement_unit', 'get_recipes_count')
-    search_fields = ('name',)
+    search_fields = ('name', 'measurement_unit')
+    list_filter = ('measurement_unit',)
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -53,33 +63,52 @@ class RecipeIngredientInline(admin.TabularInline):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'cooking_time',
+    list_display = ('name',
+                    'cooking_time',
+                    'author',
                     'get_tags_list',
                     'get_ingredients_list',
-                    'get_favorite_count')
-    search_fields = ('name',)
+                    'get_favorite_count',
+                    'get_image')
+    search_fields = ('name', 'tags__name')
+    list_filter = ('author__username', 'tags__name')
     inlines = (RecipeIngredientInline,)
 
     def get_queryset(self, request):
-        queryset = super().get_queryset(request).prefetch_related(
-            'tags', 'recipe_ingredients__ingredient').annotate(
-            favorite_total=Count('favorite')
-        )
+        queryset = (
+            super().get_queryset(request)
+            .prefetch_related('tags', 'recipe_ingredients__ingredient')
+            .annotate(favorite_total=Count('favorite')
+        ))
         return queryset
 
     @admin.display(description='Тэги')
+    @mark_safe
     def get_tags_list(self, obj):
-        return ', '.join(tag.name for tag in obj.tags.all())
+        if obj.tags.exists():
+            tags = obj.tags.values_list('name', flat=True)
+            tags_list = [f'<li>{tag}</li>' for tag in tags]
+            return f'<ul>{"".join(tags_list)}</ul>'
+        return 'Нет тэгов'
 
     @admin.display(description='Ингредиенты')
+    @mark_safe
     def get_ingredients_list(self, obj):
-        return ', '.join(
-            ingredient.name for ingredient in obj.ingredients.all())
+        ingredients = (obj.recipe_ingredients
+                       .select_related('ingredient').all())
+        return get_ingredients_list(ingredients)
 
     @admin.display(description='Добавлений в избранное',
                    ordering='favorite_total')
     def get_favorite_count(self, obj):
         return obj.favorite_total
+
+    @admin.display(description='Изображение')
+    @mark_safe
+    def get_image(self, obj):
+        if obj.image:
+            return f'<img src="{obj.image.url}" width="75" height="75" />'
+        return 'Нет изображения'
 
 
 @admin.register(RecipeIngredient)
@@ -95,3 +124,37 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
     @admin.display(description='Ед. изм')
     def measurement_unit(self, obj):
         return obj.ingredient.measurement_unit
+
+
+class UserRecipeBase(admin.ModelAdmin):
+    list_display = ('user', 'recipe', 'get_ingredients')
+    search_fields = ('user__username', 'recipe__name')
+    autocomplete_fields = ('user', 'recipe')
+
+    class Meta:
+        abstract = True
+
+    @admin.display(description='Ингредиенты')
+    @mark_safe
+    def get_ingredients(self, obj):
+        ingredients = (obj.recipe.recipe_ingredients
+                       .select_related('ingredient').all())
+        # if ingredients.exists():
+        #     ingredients_list = [
+        #         (f'<li>{item.ingredient.name} - ({item.amount}'
+        #          f'{item.ingredient.measurement_unit})</li>')
+        #         for item in ingredients
+        #     ]
+        #     return f'<ul>{"".join(ingredients_list)}</ul>'
+        #
+        # return 'Нет ингредиентов'
+        return get_ingredients_list(ingredients)
+
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(UserRecipeBase):
+    pass
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(UserRecipeBase):
+    pass

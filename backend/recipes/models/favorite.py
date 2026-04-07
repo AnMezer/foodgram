@@ -1,4 +1,4 @@
-from api.models.base_models import UserRecipeBase
+from recipes.models.base_models import UserRecipeBase
 
 
 class Favorite(UserRecipeBase):

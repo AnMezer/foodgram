@@ -14,7 +14,7 @@ from .exceptions import ModelNotFoundError
 User = get_user_model()
 IMPORT_QUEUE = {
     'users': ['customuser'],
-    'recipes': ['ingredient', 'recipe', 'tag']
+    'recipes': ['ingredient', 'tag', 'recipe']
 
 }
 M2M_TABLES = {

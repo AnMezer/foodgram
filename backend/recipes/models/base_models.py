@@ -21,4 +21,8 @@ class UserRecipeBase(UserBase):
                                verbose_name='Рецепт')
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=('user', 'recipe'),
+                                    name='unique_shopping_cart')
+        ]
         abstract = True

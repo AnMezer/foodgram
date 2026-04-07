@@ -1,4 +1,4 @@
 username,email,first_name,last_name,password,is_staff,is_superuser,is_active
-vasya.ivanov,vivanov@yandex.ru,Вася,Иванов,MySecretPas$word,0,0,1
-second-user,second_user@email.org,Андрей,Макаревский,MySecretPas$word,0,0,1
-third-user-username,third-user@user.ru,Гордон,Рамзиков,MySecretPas$word,0,0,1
+test_user_1,test_1@yandex.ru,Васян,Иванов,MySecretPas$word,0,0,1
+test_user_2,test_1@email.org,Андрюха,Макаревский,MySecretPas$word,0,0,1
+test_user_3,test_1@user.ru,Гордон,Фриман,MySecretPas$word,0,0,1

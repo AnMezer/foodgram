@@ -1,7 +1,7 @@
 import os
 
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.timezone import now
 from slugify import slugify
@@ -29,8 +29,11 @@ class Recipe(models.Model):
         help_text=f'Макс. {config.RECIPE_NAME_LENGTH} символов')
     text = models.TextField('Описание рецепта')
     cooking_time = models.PositiveSmallIntegerField(
-        'Время приготовления (минут)',
-        validators=[MinValueValidator(1)])
+        'мин',
+        validators=[
+            MinValueValidator(config.COOKING_TIME_MIN),
+            MaxValueValidator(config.COOKING_TIME_MAX)
+        ])
     tags = models.ManyToManyField(Tag, verbose_name='Тэги')
     ingredients = models.ManyToManyField(Ingredient,
                                          through='RecipeIngredient',

@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from pydantic import ValidationError
 
-from api.models.base_models import UserBase
+from recipes.models.base_models import UserBase
 
 User = get_user_model()
 

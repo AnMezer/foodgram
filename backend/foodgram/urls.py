@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from recipes.v1.views import redirect_to_recipe
+from api.v1.views.recipes_views import redirect_to_recipe
 
 admin.site.site_header = 'Панель администратора Foodgram'
 

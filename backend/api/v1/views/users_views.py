@@ -7,9 +7,9 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from api.serializers import (AvatarEditSerializer, SetPasswordSerializer,
-                             SubscribeSerializer, UserCreateSerializer,
-                             UsersListSerializer)
+from api.v1.serializers.serializers import (AvatarEditSerializer, SetPasswordSerializer,
+                                            SubscribeSerializer, UserCreateSerializer,
+                                            UsersListSerializer)
 from recipes.permissions import IsSelfUser
 from users.models import Subscribe
 

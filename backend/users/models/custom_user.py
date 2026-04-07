@@ -1,6 +1,8 @@
 import os
+import re
 
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
 from django.db import models
 
 from project_settings import config
@@ -14,12 +16,20 @@ def get_user_avatar_path(instance, filename):
 
 
 class CustomUser(AbstractUser):
+    username = models.CharField('Имя пользователя',
+                                max_length=config.USERNAME_LENGTH,
+                                unique=True,
+                                validators=[
+                                    RegexValidator(regex=config.REGEX_STAMP,
+                                                   flags=re.IGNORECASE)
+                                ])
     avatar = models.ImageField('Аватар',
                                upload_to=get_user_avatar_path,
-                               blank=True)
+                               blank=True,
+                               default='')
     email = models.EmailField(unique=True, max_length=config.EMAIL_LENGTH)
     first_name = models.CharField('Имя', max_length=config.FIRST_NAME_LENGTH)
-    last_name = models.CharField('Имя', max_length=config.LAST_NAME_LENGTH)
+    last_name = models.CharField('Фамилия', max_length=config.LAST_NAME_LENGTH)
     is_banned = models.BooleanField('Заблокирован', default=False)
 
     class Meta:

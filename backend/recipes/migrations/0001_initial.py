@@ -2,8 +2,9 @@
 
 import django.core.validators
 import django.utils.timezone
-import recipes.models.recipe
 from django.db import migrations, models
+
+import recipes.models.recipe
 
 
 class Migration(migrations.Migration):

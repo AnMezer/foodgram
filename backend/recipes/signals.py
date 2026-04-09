@@ -16,6 +16,6 @@ def delete_old_recipe_image(sender, instance, **kwargs):
     """Перед обновлением рецепта удаляет файл с его старым изображением"""
     if not instance.pk:
         return
-    old_instance = Recipe.objects.get(pk=instance.pk)
+    old_instance = Recipe.objects.filter(pk=instance.pk).first()
     if old_instance.image and instance.image:
         old_instance.image.delete(save=False)

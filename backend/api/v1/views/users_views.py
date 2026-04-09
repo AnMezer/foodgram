@@ -7,10 +7,12 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from api.v1.serializers.serializers import (AvatarEditSerializer, SetPasswordSerializer,
-                                            SubscribeSerializer, UserCreateSerializer,
+from api.permissions import IsAuthorOrReadonly
+from api.v1.serializers.serializers import (AvatarEditSerializer,
+                                            SetPasswordSerializer,
+                                            SubscribeSerializer,
+                                            UserCreateSerializer,
                                             UsersListSerializer)
-from recipes.permissions import IsAuthorOrReadonly
 from users.models import Subscribe
 
 User = get_user_model()

@@ -26,7 +26,7 @@ services:
         condition: service_healthy
     volumes:
       - static:/backend_static
-      - media:/media
+      - media:/app/media
       - ./data:/data
     restart: unless-stopped
 

@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count
 from django.utils.safestring import mark_safe
 
-from .models import ShoppingCart, Favorite
+from .models import Favorite, ShoppingCart
 from .models.ingredient import Ingredient
 from .models.recipe import Recipe
 from .models.recipe_ingredient import RecipeIngredient
@@ -115,7 +115,7 @@ class RecipeAdmin(admin.ModelAdmin):
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'ingredient', 'measurement_unit', 'amount')
-    search_fields = ('recipe', 'ingredient')
+    search_fields = ('recipe__name', 'ingredient__name')
     autocomplete_fields = ('recipe', 'ingredient')
 
     def get_queryset(self, request):

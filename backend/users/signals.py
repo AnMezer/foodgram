@@ -10,5 +10,5 @@ def delete_avatar(sender, instance, **kwargs):
     """Удаляет файл аватара"""
     if not instance.pk:
         return
-    old_instance = User.objects.get(pk=instance.pk)
+    old_instance = User.objects.filter(pk=instance.pk).first()
     old_instance.avatar.delete(save=False)

@@ -171,6 +171,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "backend/media/recipes/images/default.png"
           target: "foodgram"
+          strip_components: 2
 
       - name: Create .env file on server
         uses: appleboy/ssh-action@master

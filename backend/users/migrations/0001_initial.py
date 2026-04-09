@@ -4,9 +4,10 @@ import django.contrib.auth.models
 import django.contrib.auth.validators
 import django.db.models.deletion
 import django.utils.timezone
-import users.models.custom_user
 from django.conf import settings
 from django.db import migrations, models
+
+import users.models.custom_user
 
 
 class Migration(migrations.Migration):

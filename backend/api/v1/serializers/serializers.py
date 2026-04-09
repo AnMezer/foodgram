@@ -1,16 +1,16 @@
 from django.contrib.auth import get_user_model
-from djoser.serializers import (
-    SetPasswordSerializer as DjoserSetPasswordSerializer)
+from djoser.serializers import (SetPasswordSerializer as
+                                DjoserSetPasswordSerializer)
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
 from api.fields import Base64ImageField
-from recipes.models.favorite import Favorite
-from recipes.models.shopping_cart import ShoppingCart
 from project_settings import config
+from recipes.models.favorite import Favorite
 from recipes.models.ingredient import Ingredient
 from recipes.models.recipe import Recipe
 from recipes.models.recipe_ingredient import RecipeIngredient
+from recipes.models.shopping_cart import ShoppingCart
 from recipes.models.tag import Tag
 from users.models.subscribe import Subscribe
 
@@ -220,7 +220,7 @@ class RecipeSerializer(RecipeShortSerializer):
 
     def validate(self, attrs):
         if self.context['request'].method == 'PATCH':
-            required_fields = ('ingredients', 'tags', 'image',
+            required_fields = ('ingredients', 'tags',
                                'name', 'text', 'cooking_time')
             missing_fields = []
             for field in required_fields:
@@ -250,12 +250,8 @@ class RecipeSerializer(RecipeShortSerializer):
     def update(self, instance, validated_data):
         tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        text = validated_data.pop('text')
 
         instance = super().update(instance, validated_data)
-
-        instance.text = text
-        instance.save(update_fields=['text'])
 
         instance.tags.set(tags)
 
@@ -266,13 +262,11 @@ class RecipeSerializer(RecipeShortSerializer):
 
     def save_ingredients(self, recipe, ingredients):
         """Сохраняет ингредиенты рецепта"""
-        objs = [
+        RecipeIngredient.objects.bulk_create(
             RecipeIngredient(
                 recipe=recipe,
                 ingredient=ingredient['id'],
-                amount=ingredient['amount']) for ingredient in ingredients
-        ]
-        RecipeIngredient.objects.bulk_create(objs)
+                amount=ingredient['amount']) for ingredient in ingredients)
 
 
 class SubscribeSerializer(UsersListSerializer):

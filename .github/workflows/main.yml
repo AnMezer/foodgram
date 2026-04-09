@@ -212,7 +212,7 @@ jobs:
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py reload
             
             sudo docker compose -f docker-compose.production.yml exec backend mkdir -p /app/media/recipes/images/
-            sudo docker compose -f docker-compose.production.yml exec backend cp /home/${{ secrets.USER }}/foodgram/media/recipes/images/default.png /app/media/recipes/images/default.png
+            sudo docker compose -f docker-compose.production.yml exec backend cp /home/${{ secrets.USER }}/foodgram/default.png /app/media/recipes/images/default.png
 
       - name: Configure SSL with certbot
         uses: appleboy/ssh-action@master

@@ -159,7 +159,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "data/"
           target: "/home/${{ secrets.USER }}/foodgram/"
-          strip_components: 0
           overwrite: true
           rm: false
 
@@ -171,7 +170,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: "backend/media/recipes/images/default.png"
           target: "foodgram"
-          strip_components: 2
+          strip_components: 4
 
       - name: Create .env file on server
         uses: appleboy/ssh-action@master
